@@ -9,8 +9,6 @@
  */
  
 (function () {
-  const SHEETS_WEBHOOK_URL = 'https://script.google.com/a/macros/glassatlas.com/s/AKfycbwKw8EcFXP8KOLmrM61_PVs3W1FnkZ5h7cgs_jpvf0bBXr38W9D4y8EII4fjp1FT1CG/exec';
- 
   // ─── Styles ────────────────────────────────────────────────────────────────
   const css = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
@@ -675,13 +673,31 @@
   document.getElementById('kv-log-back').addEventListener('click', showMenu);
  
   // ─── Sheet submission ───────────────────────────────────────────────────────
+  const AIRTABLE_TOKEN = 'patk6PmPSvMtvB3mR.cd17f851665c34b6178e83fd5f83ab940f50a22452c1ebbfd5b22b0bab4299f1';
+  const AIRTABLE_BASE  = 'appysniPp7clFe1Nr';
+  const AIRTABLE_TABLE = 'Submissions';
+ 
   async function submitToSheet(payload) {
-    if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-      console.warn('[Kardio Voice] No webhook URL set. Configure SHEETS_WEBHOOK_URL in kardio-voice.js');
-      return { ok: true, mock: true };
-    }
-    const url = SHEETS_WEBHOOK_URL + '?payload=' + encodeURIComponent(JSON.stringify(payload));
-    await fetch(url, { method: 'GET', mode: 'no-cors' });
+    const res = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + encodeURIComponent(AIRTABLE_TABLE), {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + AIRTABLE_TOKEN,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        fields: {
+          'Type':      payload.type      || '',
+          'Message':   payload.message   || '',
+          'Detail':    payload.detail    || payload.steps || '',
+          'Priority':  payload.priority  || payload.severity || payload.topics || '',
+          'Name':      payload.name      || '',
+          'Account':   payload.account   || '',
+          'Page URL':  payload.pageUrl   || '',
+          'Timestamp': payload.timestamp || ''
+        }
+      })
+    });
+    if (!res.ok) throw new Error('Airtable error: ' + res.status);
     return { ok: true };
   }
  
