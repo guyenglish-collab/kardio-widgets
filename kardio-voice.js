@@ -1,5 +1,5 @@
 /*!
- * Kardio Voice Widget v1.0
+ * Kardio Voice Widget v1.1
  * Embeddable feedback widget for Kardio (gokard.io)
  * 
  * SETUP:
@@ -7,20 +7,20 @@
  * 2. Replace SHEETS_WEBHOOK_URL below with your deployed script URL
  * 3. Add this script to your page: <script src="kardio-voice.js"></script>
  */
-
+ 
 (function () {
-  const SHEETS_WEBHOOK_URL = 'https://script.google.com/a/macros/glassatlas.com/s/AKfycbwKw8EcFXP8KOLmrM61_PVs3W1FnkZ5h7cgs_jpvfObBXr38W9D4y8EII4fjp1FT1CG/exec';
-
+  const SHEETS_WEBHOOK_URL = 'https://script.google.com/a/macros/glassatlas.com/s/AKfycbwKw8EcFXP8KOLmrM61_PVs3W1FnkZ5h7cgs_jpvf0bBXr38W9D4y8EII4fjp1FT1CG/exec';
+ 
   // ─── Styles ────────────────────────────────────────────────────────────────
   const css = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
+ 
     #kv-root *, #kv-root *::before, #kv-root *::after {
       box-sizing: border-box;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-
+ 
     #kv-fab {
       position: fixed;
       bottom: 24px;
@@ -45,7 +45,7 @@
     #kv-fab .kv-fab-icon { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s; }
     #kv-fab .kv-fab-icon.hide { transform: rotate(90deg) scale(0.6); opacity: 0; position: absolute; }
     #kv-fab .kv-fab-icon.show { transform: rotate(0deg) scale(1); opacity: 1; }
-
+ 
     #kv-panel {
       position: fixed;
       bottom: 90px;
@@ -68,7 +68,7 @@
       opacity: 1;
       pointer-events: all;
     }
-
+ 
     .kv-header {
       padding: 18px 20px 16px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -116,7 +116,7 @@
       text-overflow: ellipsis;
       flex-shrink: 0;
     }
-
+ 
     .kv-menu {
       padding: 14px;
       display: flex;
@@ -167,13 +167,13 @@
       font-size: 18px;
       line-height: 1;
     }
-
+ 
     .kv-form-wrap {
       display: none;
       padding: 0 14px 14px;
     }
     .kv-form-wrap.kv-active { display: block; }
-
+ 
     .kv-back {
       display: flex;
       align-items: center;
@@ -195,7 +195,7 @@
       margin: 0 0 14px;
       letter-spacing: -0.01em;
     }
-
+ 
     .kv-field { margin-bottom: 10px; }
     .kv-field label {
       display: block;
@@ -228,7 +228,7 @@
       background: rgba(255,255,255,0.07);
     }
     .kv-field textarea { min-height: 82px; }
-
+ 
     .kv-chips {
       display: flex;
       flex-wrap: wrap;
@@ -251,7 +251,7 @@
       color: #4ade80;
       font-weight: 500;
     }
-
+ 
     .kv-levels {
       display: flex;
       gap: 6px;
@@ -276,7 +276,7 @@
     .kv-level[data-val="Moderate"].kv-sel { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.3); color: #fbbf24; }
     .kv-level[data-val="High"].kv-sel,
     .kv-level[data-val="Critical"].kv-sel { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); color: #f87171; }
-
+ 
     .kv-submit {
       width: 100%;
       padding: 12px;
@@ -295,7 +295,7 @@
     .kv-submit:hover { background: #86efac; }
     .kv-submit:active { transform: scale(0.98); }
     .kv-submit:disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); cursor: default; transform: none; }
-
+ 
     #kv-success {
       display: none;
       padding: 8px 14px 18px;
@@ -317,7 +317,7 @@
     }
     .kv-success-inner h4 { font-size: 15px; font-weight: 600; color: #f1f5f9; margin: 0 0 6px; }
     .kv-success-inner p { font-size: 13px; color: rgba(255,255,255,0.4); margin: 0; }
-
+ 
     .kv-footer {
       padding: 10px 14px 13px;
       border-top: 1px solid rgba(255,255,255,0.06);
@@ -345,7 +345,7 @@
       font-family: inherit;
     }
     .kv-view-log:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.55); }
-
+ 
     .kv-log-wrap {
       display: none;
       padding: 0 14px 14px;
@@ -369,7 +369,7 @@
     .kv-log-msg { font-size: 13px; color: #e2e8f0; line-height: 1.4; }
     .kv-log-meta { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 5px; }
     .kv-log-empty { text-align: center; padding: 24px 0; font-size: 13px; color: rgba(255,255,255,0.25); }
-
+ 
     .kv-spinner {
       display: inline-block;
       width: 14px; height: 14px;
@@ -381,7 +381,7 @@
       margin-right: 6px;
     }
     @keyframes kv-spin { to { transform: rotate(360deg); } }
-
+ 
     .kv-error-msg {
       font-size: 12px;
       color: #f87171;
@@ -389,12 +389,12 @@
       display: none;
     }
   `;
-
+ 
   // ─── HTML ──────────────────────────────────────────────────────────────────
   const html = `
     <style>${css}</style>
     <div id="kv-root">
-
+ 
       <button id="kv-fab" title="Kardio Voice">
         <span class="kv-fab-icon show" id="kv-icon-chat">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f1f5f9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -408,7 +408,7 @@
           </svg>
         </span>
       </button>
-
+ 
       <div id="kv-panel">
         <div class="kv-header">
           <div class="kv-header-logo">
@@ -422,7 +422,7 @@
           </div>
           <div class="kv-account-pill" id="kv-acct-pill" style="display:none;"></div>
         </div>
-
+ 
         <!-- Menu -->
         <div id="kv-menu-view">
           <div class="kv-menu">
@@ -456,7 +456,7 @@
             </button>
           </div>
         </div>
-
+ 
         <!-- Form: Question -->
         <div id="kv-form-question" class="kv-form-wrap">
           <button class="kv-back" data-back>
@@ -477,7 +477,7 @@
           <div class="kv-error-msg" id="q-err">Please enter your question.</div>
           <button class="kv-submit" id="q-btn">Send question</button>
         </div>
-
+ 
         <!-- Form: Feature Request -->
         <div id="kv-form-feature" class="kv-form-wrap">
           <button class="kv-back" data-back>
@@ -497,7 +497,7 @@
           <div class="kv-error-msg" id="f-err">Please add a title.</div>
           <button class="kv-submit" id="f-btn">Submit request</button>
         </div>
-
+ 
         <!-- Form: Bug Report -->
         <div id="kv-form-bug" class="kv-form-wrap">
           <button class="kv-back" data-back>
@@ -517,7 +517,7 @@
           <div class="kv-error-msg" id="b-err">Please describe the bug.</div>
           <button class="kv-submit" id="b-btn">Report bug</button>
         </div>
-
+ 
         <!-- Success -->
         <div id="kv-success">
           <div class="kv-success-inner">
@@ -529,7 +529,7 @@
           </div>
           <button class="kv-submit" id="kv-done">Back to menu</button>
         </div>
-
+ 
         <!-- Log view -->
         <div id="kv-log-view" class="kv-log-wrap">
           <button class="kv-back" id="kv-log-back">
@@ -542,23 +542,23 @@
       </div>
     </div>
   `;
-
+ 
   // ─── Mount ─────────────────────────────────────────────────────────────────
   const mount = document.createElement('div');
   mount.innerHTML = html;
   document.body.appendChild(mount);
-
+ 
   // ─── State ─────────────────────────────────────────────────────────────────
   let account = '', userName = '', panelOpen = false;
   const state = { qTopics: [], fPriority: '', bSeverity: '' };
-
+ 
   // ─── DOM refs ──────────────────────────────────────────────────────────────
   const fab       = document.getElementById('kv-fab');
   const panel     = document.getElementById('kv-panel');
   const menuView  = document.getElementById('kv-menu-view');
   const successEl = document.getElementById('kv-success');
   const logView   = document.getElementById('kv-log-view');
-
+ 
   // ─── Profile capture ───────────────────────────────────────────────────────
   function captureProfile() {
     try {
@@ -575,7 +575,7 @@
       document.getElementById('kv-greeting').textContent = 'Hi ' + userName.split(' ')[0] + ', how can we help?';
     }
   }
-
+ 
   // ─── FAB toggle ────────────────────────────────────────────────────────────
   fab.addEventListener('click', () => {
     panelOpen = !panelOpen;
@@ -586,7 +586,7 @@
     document.getElementById('kv-icon-close').classList.toggle('hide', !panelOpen);
     if (panelOpen) { captureProfile(); showMenu(); }
   });
-
+ 
   // ─── Navigation ────────────────────────────────────────────────────────────
   function showMenu() {
     menuView.style.display = 'block';
@@ -594,7 +594,7 @@
     logView.classList.remove('kv-active');
     document.querySelectorAll('.kv-form-wrap').forEach(f => f.classList.remove('kv-active'));
   }
-
+ 
   document.querySelectorAll('[data-open]').forEach(btn => {
     btn.addEventListener('click', () => {
       menuView.style.display = 'none';
@@ -605,13 +605,13 @@
       document.getElementById('kv-form-' + btn.dataset.open).classList.add('kv-active');
     });
   });
-
+ 
   document.querySelectorAll('[data-back]').forEach(btn => {
     btn.addEventListener('click', showMenu);
   });
-
+ 
   document.getElementById('kv-done').addEventListener('click', showMenu);
-
+ 
   // ─── Chips & levels ────────────────────────────────────────────────────────
   document.querySelectorAll('#q-topics .kv-chip').forEach(chip => {
     chip.addEventListener('click', () => {
@@ -622,21 +622,21 @@
         : state.qTopics.filter(t => t !== v);
     });
   });
-
+ 
   document.querySelectorAll('#f-priority .kv-level').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#f-priority .kv-level').forEach(b => b.classList.remove('kv-sel'));
       btn.classList.add('kv-sel'); state.fPriority = btn.dataset.val;
     });
   });
-
+ 
   document.querySelectorAll('#b-severity .kv-level').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#b-severity .kv-level').forEach(b => b.classList.remove('kv-sel'));
       btn.classList.add('kv-sel'); state.bSeverity = btn.dataset.val;
     });
   });
-
+ 
   // ─── Submissions log (localStorage) ────────────────────────────────────────
   function saveLocal(entry) {
     try {
@@ -645,7 +645,7 @@
       localStorage.setItem('kv_submissions', JSON.stringify(existing.slice(0, 200)));
     } catch(e) {}
   }
-
+ 
   function showLog() {
     menuView.style.display = 'none';
     logView.classList.add('kv-active');
@@ -670,25 +670,21 @@
       list.innerHTML = '<div class="kv-log-empty">Unable to load log</div>';
     }
   }
-
+ 
   document.getElementById('kv-log-btn').addEventListener('click', showLog);
   document.getElementById('kv-log-back').addEventListener('click', showMenu);
-
+ 
   // ─── Sheet submission ───────────────────────────────────────────────────────
   async function submitToSheet(payload) {
     if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
       console.warn('[Kardio Voice] No webhook URL set. Configure SHEETS_WEBHOOK_URL in kardio-voice.js');
       return { ok: true, mock: true };
     }
-    const res = await fetch(SHEETS_WEBHOOK_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    const url = SHEETS_WEBHOOK_URL + '?payload=' + encodeURIComponent(JSON.stringify(payload));
+    await fetch(url, { method: 'GET', mode: 'no-cors' });
     return { ok: true };
   }
-
+ 
   async function handleSubmit(btnId, errId, buildPayload, successMsg, resetFn) {
     const btn = document.getElementById(btnId);
     const err = document.getElementById(errId);
@@ -716,7 +712,7 @@
     btn.disabled = false;
     btn.textContent = btn.dataset.label || 'Submit';
   }
-
+ 
   // ─── Question ──────────────────────────────────────────────────────────────
   document.getElementById('q-btn').dataset.label = 'Send question';
   document.getElementById('q-btn').addEventListener('click', () => {
@@ -730,7 +726,7 @@
       () => { document.getElementById('q-q').value = ''; state.qTopics = []; }
     );
   });
-
+ 
   // ─── Feature ───────────────────────────────────────────────────────────────
   document.getElementById('f-btn').dataset.label = 'Submit request';
   document.getElementById('f-btn').addEventListener('click', () => {
@@ -744,7 +740,7 @@
       () => { document.getElementById('f-title').value = ''; document.getElementById('f-detail').value = ''; }
     );
   });
-
+ 
   // ─── Bug ───────────────────────────────────────────────────────────────────
   document.getElementById('b-btn').dataset.label = 'Report bug';
   document.getElementById('b-btn').addEventListener('click', () => {
@@ -758,5 +754,5 @@
       () => { document.getElementById('b-desc').value = ''; document.getElementById('b-steps').value = ''; }
     );
   });
-
+ 
 })();
