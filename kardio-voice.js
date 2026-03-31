@@ -9,7 +9,7 @@
  */
 
 (function () {
-  const SHEETS_WEBHOOK_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+  const SHEETS_WEBHOOK_URL = 'https://script.google.com/a/macros/glassatlas.com/s/AKfycbwKw8EcFXP8KOLmrM61_PVs3W1FnkZ5h7cgs_jpvfObBXr38W9D4y8EII4fjp1FT1CG/exec';
 
   // ─── Styles ────────────────────────────────────────────────────────────────
   const css = `
