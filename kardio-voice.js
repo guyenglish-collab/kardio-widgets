@@ -448,10 +448,7 @@
           </div>
           <div class="kv-footer">
             <span class="kv-footer-brand">Powered by <span>Kardio Voice</span></span>
-            <button class="kv-view-log" id="kv-log-btn">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-              Submissions log
-            </button>
+
           </div>
         </div>
 
@@ -528,15 +525,6 @@
           <button class="kv-submit" id="kv-done">Back to menu</button>
         </div>
 
-        <!-- Log view -->
-        <div id="kv-log-view" class="kv-log-wrap">
-          <button class="kv-back" id="kv-log-back">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-            Back
-          </button>
-          <div class="kv-form-title">Submissions log</div>
-          <div id="kv-log-list"></div>
-        </div>
       </div>
     </div>
   `;
@@ -555,7 +543,6 @@
   const panel     = document.getElementById('kv-panel');
   const menuView  = document.getElementById('kv-menu-view');
   const successEl = document.getElementById('kv-success');
-  const logView   = document.getElementById('kv-log-view');
 
   // ─── Profile capture ───────────────────────────────────────────────────────
   function captureProfile() {
@@ -589,7 +576,6 @@
   function showMenu() {
     menuView.style.display = 'block';
     successEl.style.display = 'none';
-    logView.classList.remove('kv-active');
     document.querySelectorAll('.kv-form-wrap').forEach(f => f.classList.remove('kv-active'));
   }
 
@@ -635,43 +621,6 @@
     });
   });
 
-  // ─── Submissions log (localStorage) ────────────────────────────────────────
-  function saveLocal(entry) {
-    try {
-      const existing = JSON.parse(localStorage.getItem('kv_submissions') || '[]');
-      existing.unshift(entry);
-      localStorage.setItem('kv_submissions', JSON.stringify(existing.slice(0, 200)));
-    } catch(e) {}
-  }
-
-  function showLog() {
-    menuView.style.display = 'none';
-    logView.classList.add('kv-active');
-    const list = document.getElementById('kv-log-list');
-    try {
-      const items = JSON.parse(localStorage.getItem('kv_submissions') || '[]');
-      if (!items.length) {
-        list.innerHTML = '<div class="kv-log-empty">No submissions yet</div>';
-        return;
-      }
-      list.innerHTML = items.map(item => {
-        const d = new Date(item.timestamp);
-        const time = d.toLocaleDateString('en-GB', { day:'numeric', month:'short' }) + ' · ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-        const badge = item.priority || item.severity || item.topics || '';
-        return `<div class="kv-log-item">
-          <div class="kv-log-type">${item.type}${badge ? ' · ' + badge : ''}</div>
-          <div class="kv-log-msg">${item.message.substring(0,120)}${item.message.length > 120 ? '…' : ''}</div>
-          <div class="kv-log-meta">${item.name || 'Unknown'} · ${item.account || '—'} · ${time}</div>
-        </div>`;
-      }).join('');
-    } catch(e) {
-      list.innerHTML = '<div class="kv-log-empty">Unable to load log</div>';
-    }
-  }
-
-  document.getElementById('kv-log-btn').addEventListener('click', showLog);
-  document.getElementById('kv-log-back').addEventListener('click', showMenu);
-
   // ─── Sheet submission ───────────────────────────────────────────────────────
   const AIRTABLE_TOKEN = 'patRi8MVcSc1dninn.8e7ecef030447c57658b4814458ecd284d893def091b4b95d9bfa7d5542d2de0';
   const AIRTABLE_BASE  = 'appysniPp7clFe1Nr';
@@ -693,7 +642,7 @@
           'Name':      payload.name      || '',
           'Account':   payload.account   || '',
           'Page URL':  payload.pageUrl   || '',
-          'Timestamp': payload.timestamp || ''
+          'Time Stamp': payload.timestamp || ''
         }
       })
     });
@@ -715,7 +664,6 @@
       payload.timestamp = new Date().toISOString();
       payload.pageUrl   = window.location.href;
       await submitToSheet(payload);
-      saveLocal(payload);
       document.querySelectorAll('.kv-form-wrap').forEach(f => f.classList.remove('kv-active'));
       menuView.style.display = 'none';
       successEl.style.display = 'block';
