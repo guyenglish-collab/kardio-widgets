@@ -179,11 +179,12 @@
       background: none;
       border: none;
       cursor: pointer;
-      color: rgba(255,255,255,0.45);
-      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
       font-weight: 500;
       padding: 12px 0 13px;
-      transition: color 0.15s;
+      transition: color 0.15s, background 0.15s;
+      border-radius: 6px;
     }
     .kv-back:hover { color: #4ade80; }
     .kv-form-title {
@@ -456,7 +457,7 @@
         <div id="kv-form-question" class="kv-form-wrap">
           <button class="kv-back" data-back>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-            Back
+            Back to menu
           </button>
           <div class="kv-form-title">Ask a question</div>
           <div class="kv-field"><label>Your question</label><textarea id="q-q" placeholder="What would you like to know about Kardio?"></textarea></div>
@@ -477,7 +478,7 @@
         <div id="kv-form-feature" class="kv-form-wrap">
           <button class="kv-back" data-back>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-            Back
+            Back to menu
           </button>
           <div class="kv-form-title">Feature Request</div>
           <div class="kv-field"><label>Feature title</label><input id="f-title" type="text" placeholder="Short description of the feature"></div>
@@ -497,7 +498,7 @@
         <div id="kv-form-bug" class="kv-form-wrap">
           <button class="kv-back" data-back>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-            Back
+            Back to menu
           </button>
           <div class="kv-form-title">Report a Bug</div>
           <div class="kv-field"><label>What happened?</label><textarea id="b-desc" placeholder="Describe the issue you encountered..."></textarea></div>
